@@ -1,0 +1,58 @@
+Unity 第一人称Camera写法：
+使用Input System或传统Input
+传统：
+private void Update()
+{
+    HandleCam();
+
+  //处理玩家自身旋转
+    transform.rotation = Quaternion.Euler(new Vector3(0,camYaw, 0));
+  //处理玩家移动
+    Move();
+}
+
+//在LateUpdate中处理相机具体旋转
+private void LateUpdate()
+{
+    mainCam.transform.rotation = Quaternion.Euler(new Vector3(camPitch, camYaw, 0));
+}
+
+private void HandleCam()
+{
+  //第一人称：将Cam设在固定点位
+    mainCam.transform.position = camPoint.transform.position;
+
+  //获取鼠标输入
+    camHorizontal = Input.GetAxis("Mouse X");
+    camVertical = Input.GetAxis("Mouse Y");
+    
+    Vector2 mouseDelta = new Vector2(camHorizontal, camVertical);
+
+  //camYaw为绕y轴旋转的角度值，camPitch为绕x轴旋转的角度值
+    camYaw += camHorizontal * Time.deltaTime * camMoveSpeed;
+  //旋转顺时针为正，逆时针为负
+  //所以上下旋转需要取反（向上看为-，向下看为+）
+    camPitch -= camVertical * Time.deltaTime * camMoveSpeed;
+  //为上下范围做限定
+    camPitch = Mathf.Clamp(camPitch, MinAngle, MaxAnlge);
+}
+
+private void Move()
+{
+    //获取键盘输入
+    horizontal = Input.GetAxisRaw("Horizontal");
+    vertical = Input.GetAxisRaw("Vertical");
+
+    //以相机正前方和正右方作为玩家移动正方向
+    //再与输入结合获取到当前玩家（相机）朝向的方向向量
+    Vector3 moveDir = mainCam.transform.forward * vertical;
+    moveDir += mainCam.transform.right * horizontal;
+    moveDir.y = 0;
+    
+    //移动玩家
+    controller.Move(new Vector3(0, gravity, 0) * Time.deltaTime);
+    controller.Move(moveDir.normalized * Time.deltaTime * 5 );
+}
+
+Input System：
+
