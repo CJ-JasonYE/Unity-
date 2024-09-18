@@ -1,0 +1,26 @@
+//如何在unity代码中动态添加Cloth和Cloth属性
+//首先你需要有一个记录你想要的Cloth属性的prefab
+//以下是伪代码psuedocode
+
+//Tip: Use Skinned Mesh Renderer
+if (needCloth)
+{
+    //添加Cloth
+    Cloth newMeshCloth = newMesh.gameObject.AddComponent<Cloth>();
+    
+    CapsuleCollider[] caps = new CapsuleCollider[Colliders.Length];
+
+    for (int i = 0; i < caps.Length; i++)
+    {
+        caps[i] = col[i];
+    }
+  
+    ClothSkinningCoefficient[] cofs = yourClothPrefab.GetComponent<Cloth>().coefficients;
+    //设置Coefficients
+    newMeshCloth.coefficients = cofs;
+
+    //设置Colliders
+    newMeshCloth.capsuleColliders = caps;
+}
+//Skinned Mesh Renderer Set to TargetTransform
+smr.transform.SetParent(parent);
