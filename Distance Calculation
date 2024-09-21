@@ -1,0 +1,17 @@
+From: https://kybernetik.com.au/cs-unity/docs/introduction/vectors/#magnitude
+Magnitude
+To calculate the distance of Vector 2 or Vector 3 to use V.Distance is not the best choise, because it cost more performance.
+This is because use sqrt will make a complex calculation. so we use square instead of using sqr root.
+
+Before:
+float distance = Vector3.Distance(target, start);
+if (distance < range) 
+{
+    // In the distance
+}
+
+After:
+if ((target - start).sqrMagnitude < range * range)
+{
+    // In the distance
+}
