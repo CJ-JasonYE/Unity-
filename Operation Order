@@ -1,0 +1,8 @@
+优化：
+更快的计算：operation order
+排序：int>float>vector>quaternion
+因此在进行计算时需要优先计算更快能够提升性能
+Incorrect：
+transform.position += transform.forward * _speed * Time.deltaTime; //这里应该优先计算float //F*F*V
+Correct:
+transform.position += _speed * Time.deltaTime * transform.forward;
