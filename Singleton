@@ -1,0 +1,51 @@
+public interface IInit
+{
+    void Init();
+}
+public class SingletonMonoBase<T> : MonoBehaviour where T : MonoBehaviour, IInit //泛型T类必须实现Init接口
+{
+    private static T _instance;
+    public static T Instance
+    {
+        get
+        {
+            if (_instance == null)
+            {
+                GameObject obj = new GameObject(typeof(T).ToString());
+                //DontDestroyOnLoad(obj);
+                _instance = obj.AddComponent<T>();
+                _instance.Init();//直接在第一次调用时初始化
+            }
+            return _instance;
+        }
+    }
+}
+
+///
+public class AutoSingletonTest : SingletonMonoBase<AutoSingletonTest>,IInit
+{
+    [SerializeField] private List<GameObject> list = new List<GameObject>();
+    private void Start()
+    {
+        DontDestroyOnLoad(gameObject);
+    }
+
+    public void Test()
+    {
+        Debug.Log(gameObject.name);
+    }
+
+    public void Init()
+    {
+        Debug.Log("Init Auto Singleton");
+        for(int i = 0; i < 10; i++)
+        {
+            list.Add(GameObject.CreatePrimitive(PrimitiveType.Cube));
+            list.Add(GameObject.CreatePrimitive(PrimitiveType.Sphere));
+            list.Add(GameObject.CreatePrimitive(PrimitiveType.Capsule));
+            list.Add(GameObject.CreatePrimitive(PrimitiveType.Plane));
+            list.Add(GameObject.CreatePrimitive(PrimitiveType.Quad));
+        }
+        Debug.Log("Init Complete");
+    }
+}
